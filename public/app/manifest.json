@@ -1,0 +1,20 @@
+{
+    "name": "So Also",
+    "short_name": "So Also",
+    "start_url": "/app/",
+    "scope": "/app/",
+    "display": "standalone",
+    "background_color": "#0b1220",
+    "theme_color": "#0ea5e9",
+    "capture_links": "existing-client",
+    "icons": [
+      { "src": "/app/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+      { "src": "/app/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    ],
+    "shortcuts": [
+      { "name": "Submit Event", "url": "/app/submit" },
+      { "name": "Nearby Events", "url": "/app/map" },
+      { "name": "Conferences", "url": "/app/conferences" }
+    ]
+  }
+  
