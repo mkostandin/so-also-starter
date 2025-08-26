@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { TopicToggle } from '../lib/topics'
+import TopicToggle from '../components/TopicToggle'
 import { FlagButton } from '../components/FlagButton'
 
 type Session = {

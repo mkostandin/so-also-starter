@@ -1,5 +1,6 @@
 import React from 'react'
-import { TopicToggle } from '../lib/topics'
+import TopicToggle from '../components/TopicToggle'
+
 
 const regularTopics = [
   { id:'events-all', label:'All regular events' },
