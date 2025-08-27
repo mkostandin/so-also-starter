@@ -4,7 +4,7 @@ body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;b
 a{color:#7dd3fc;text-decoration:none} a:hover{text-decoration:underline}
 .header{height:48px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.4);backdrop-filter:saturate(140%) blur(6px);position:sticky;top:0;z-index:10}
 .tabs{position:fixed;bottom:0;left:0;right:0;border-top:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.6);backdrop-filter:saturate(140%) blur(6px)}
-.tabs ul{display:grid;grid-template-columns:repeat(5,1fr);margin:0;padding:0}
+.tabs ul{display:grid;grid-template-columns:repeat(4,1fr);margin:0;padding:0}
 .tabs li{list-style:none}
 .tabs a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;color:#d1d5db}
 .tabs a.active{color:#22d3ee}
@@ -20,3 +20,11 @@ label{font-size:12px;opacity:.8}
 .small{font-size:12px;opacity:.75}
 .center{display:flex;justify-content:center;align-items:center}
 .badge{display:inline-block;padding:2px 8px;border-radius:9999px;background:#0ea5e933;color:#7dd3fc;border:1px solid #0ea5e9}
+/* segmented control */
+.segmented{display:flex;gap:6px;background:#0c1422;border:1px solid rgba(255,255,255,.12);padding:6px;border-radius:12px}
+.segmented .seg{flex:1;text-align:center;padding:8px 10px;border-radius:8px;color:#d1d5db}
+.segmented .seg.active{background:#0ea5e933;color:#7dd3fc;border:1px solid #0ea5e9}
+/* map container */
+.map-card{padding:0}
+.map-wrapper{height:60vh}
+.map-container{height:100%; width:100%; border-radius:12px; overflow:hidden}

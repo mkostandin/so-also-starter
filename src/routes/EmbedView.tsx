@@ -11,8 +11,12 @@ export default function EmbedView(){
         <div className="small">Embed mode</div>
         <h3>Committee: {committee}</h3>
         <p className="small">View: {view} • Range: {range}</p>
-        <div className="card center" style={{height:280}}>This iframe shows only filtered events.</div>
-        <a className="btn" href={`/app/map?committee=${committee}`}>Open in So Also</a>
+        <div className="card center" style={{height:280}}>
+          {view === 'list' && 'This iframe shows a list of filtered events.'}
+          {view === 'map' && 'This iframe shows a map of filtered events.'}
+          {view === 'calendar' && 'This iframe shows a calendar of filtered events.'}
+        </div>
+        <a className="btn" href={`/app/map${view === 'list' ? '/list' : view === 'calendar' ? '/calendar' : ''}?committee=${committee}`}>Open in So Also</a>
       </div>
     </div>
   )

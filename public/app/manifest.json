@@ -12,8 +12,8 @@
       { "src": "/app/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
     ],
     "shortcuts": [
+      { "name": "Browse", "url": "/app/map" },
       { "name": "Submit Event", "url": "/app/submit" },
-      { "name": "Nearby Events", "url": "/app/map" },
       { "name": "Conferences", "url": "/app/conferences" }
     ]
   }

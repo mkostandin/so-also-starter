@@ -22,7 +22,6 @@ export default function AppShell(){
 function Tabs(){
   const tabs = [
     { to:'/app/map', label:'Map', icon:'🗺️' },
-    { to:'/app/list', label:'List', icon:'📋' },
     { to:'/app/submit', label:'Submit', icon:'➕' },
     { to:'/app/conferences', label:'Conferences', icon:'🏛️' },
     { to:'/app/settings', label:'Settings', icon:'⚙️' },

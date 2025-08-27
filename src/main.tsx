@@ -1,10 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import './styles.css'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import AppShell from './AppShell'
 import MapView from './routes/MapView'
 import ListView from './routes/ListView'
+import CalendarView from './routes/CalendarView'
+import MapHome from './routes/MapHome'
 import SubmitEvent from './routes/SubmitEvent'
 import Settings from './routes/Settings'
 import EventDetail from './routes/EventDetail'
@@ -19,9 +22,16 @@ const router = createBrowserRouter([
     path: '/app',
     element: <AppShell/>,
     children: [
-      { index: true, element: <MapView/> },
-      { path: 'map', element: <MapView/> },
-      { path: 'list', element: <ListView/> },
+      { index: true, element: <Navigate to="/app/map" replace/> },
+      {
+        path: 'map',
+        element: <MapView/>,
+        children: [
+          { index: true, element: <MapHome/> },
+          { path: 'list', element: <ListView/> },
+          { path: 'calendar', element: <CalendarView/> }
+        ]
+      },
       { path: 'submit', element: <SubmitEvent/> },
       { path: 'settings', element: <Settings/> },
       { path: 'conferences', element: <Conferences/> },
