@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA routing: let React Router handle /app/* and others.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Make sure the service worker updates quickly
+[[headers]]
+  for = "/app/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Optional: don’t aggressively cache the manifest
+[[headers]]
+  for = "/app/manifest.json"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# (Optional) basic security headers; avoid frame-ancestors so Squarespace can iframe your /embed route
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
