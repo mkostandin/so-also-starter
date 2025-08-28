@@ -17,12 +17,13 @@ export default function MapHome(){
     if (!containerRef.current) return
     if (mapRef.current) return
 
-    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN as string
+    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: 'mapbox://styles/mapbox/dark-v11',
       center: [-71.5, 43.0],
-      zoom: 7
+      zoom: 7,
+      attributionControl: false
     })
     mapRef.current = map
 
@@ -67,7 +68,7 @@ export default function MapHome(){
           'text-size': 12
         },
         paint: {
-          'text-color': '#7dd3fc'
+          'text-color': '#0284c7'
         }
       })
 
@@ -90,12 +91,12 @@ export default function MapHome(){
         const source = map.getSource('events') as mapboxgl.GeoJSONSource
         if (!clusterId || !source) return
         source.getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err) return
+          if (err || zoom === null) return
           const coordinates = (features[0].geometry as any).coordinates as [number, number]
           map.easeTo({ center: coordinates, zoom })
         })
       })
-
+      // Formatting for the popup
       map.on('click', 'unclustered-point', (e) => {
         const f = e.features?.[0] as any
         if (!f) return
@@ -103,7 +104,7 @@ export default function MapHome(){
         const name = f.properties?.name as string
         const id = f.properties?.id as string
         const city = f.properties?.city as string | undefined
-        const html = `<div style="min-width:180px"><strong>${name}</strong>${city ? `<div class=\"small\">${city}</div>`: ''}<div style=\"margin-top:8px\"><a class=\"btn\" href=\"/app/e/${id}\">Open</a></div></div>`
+        const html = `<div style="min-width:180px"><strong style="color:#333;font-weight:600;">${name}</strong>${city ? `<div style="font-size:12px;color:#666;margin-top:4px;">${city}</div>`: ''}<div style=\"margin-top:8px\"><a class=\"btn\" href=\"/app/e/${id}\">Open</a></div></div>`
         new mapboxgl.Popup({ offset: 12 }).setLngLat(coordinates).setHTML(html).addTo(map)
       })
 
