@@ -178,7 +178,18 @@ export class PWAInstallManager {
   }
 
   private isInWebAppiOS(): boolean {
-    return this.isIOS() && (window.navigator as any).standalone === true;
+    if (!this.isIOS()) return false;
+
+    // Check for standalone mode
+    const isStandalone = (window.navigator as any).standalone === true;
+
+    // Also check for fullscreen display mode (iOS 11.3+)
+    const isFullscreen = window.matchMedia('(display-mode: standalone)').matches;
+
+    // Check if launched from home screen shortcut (older iOS versions)
+    const isLaunchedFromHomeScreen = window.history.length <= 1;
+
+    return isStandalone || isFullscreen || (isLaunchedFromHomeScreen && !window.opener);
   }
 }
 
@@ -304,8 +315,8 @@ export function showNotification(title: string, options?: NotificationOptions): 
   }
 
   return new Notification(title, {
-    icon: '/app/icons/icon-192.png',
-    badge: '/app/icons/icon-192.png',
+    icon: '/app/icon-192.png',
+    badge: '/app/icon-192.png',
     ...options
   });
 }
@@ -335,20 +346,40 @@ export function onServiceWorkerUpdate(callback: (registration: ServiceWorkerRegi
     callback(registration);
   };
 
-  navigator.serviceWorker.addEventListener('updatefound', () => {
-    const newWorker = navigator.serviceWorker.controller?.scriptURL;
-    if (newWorker) {
-      // A new service worker is available
-      navigator.serviceWorker.getRegistration().then(registration => {
-        if (registration) {
+  let updateFoundHandler: ((this: ServiceWorkerRegistration, ev: Event) => any) | null = null;
+
+  navigator.serviceWorker.getRegistration().then(registration => {
+    if (!registration) return;
+
+    // Listen for when a new service worker is waiting
+    if (registration.waiting) {
+      handleUpdate(registration);
+    }
+
+    // Listen for new service worker installation
+    updateFoundHandler = () => {
+      const newWorker = registration.installing;
+      if (!newWorker) return;
+
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // New service worker is installed and ready to activate
           handleUpdate(registration);
         }
       });
-    }
+    };
+
+    registration.addEventListener('updatefound', updateFoundHandler);
   });
 
   // Return cleanup function
   return () => {
-    // No specific cleanup needed for this listener
+    if (updateFoundHandler) {
+      navigator.serviceWorker.getRegistration().then(registration => {
+        if (registration) {
+          registration.removeEventListener('updatefound', updateFoundHandler);
+        }
+      });
+    }
   };
 }

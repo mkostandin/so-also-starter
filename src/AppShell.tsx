@@ -10,12 +10,83 @@ import {
   onServiceWorkerUpdate
 } from './lib/pwa'
 
+function PWAErrorBoundary({ children }: { children: React.ReactNode }) {
+  const [hasError, setHasError] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('PWA Error:', event.error)
+      setHasError(true)
+      setError(event.error)
+    }
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error('PWA Promise Rejection:', event.reason)
+      setHasError(true)
+      setError(new Error('Promise rejection: ' + event.reason))
+    }
+
+    window.addEventListener('error', handleError)
+    window.addEventListener('unhandledrejection', handleUnhandledRejection)
+
+    return () => {
+      window.removeEventListener('error', handleError)
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection)
+    }
+  }, [])
+
+  if (hasError) {
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: '#0b1220',
+        color: '#e6edf8',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+        textAlign: 'center',
+        zIndex: 10000
+      }}>
+        <h2>App Error</h2>
+        <p>Something went wrong with the PWA features. The app will continue to work normally.</p>
+        <button
+          onClick={() => {
+            setHasError(false)
+            setError(null)
+            window.location.reload()
+          }}
+          style={{
+            background: '#0ea5e9',
+            color: 'white',
+            border: 'none',
+            padding: '10px 20px',
+            borderRadius: '10px',
+            marginTop: '1rem',
+            cursor: 'pointer'
+          }}
+        >
+          Reload App
+        </button>
+      </div>
+    )
+  }
+
+  return <>{children}</>
+}
+
 function useHideTabs(){
   const { pathname } = useLocation()
   return pathname.startsWith('/app/e/')
 }
 
-export default function AppShell(){
+function AppShell(){
   const hideTabs = useHideTabs()
   const [isOffline, setIsOffline] = useState(!isOnline())
   const [showInstallPrompt, setShowInstallPrompt] = useState(false)
@@ -148,5 +219,13 @@ function Tabs(){
         ))}
       </ul>
     </nav>
+  )
+}
+
+export default function AppShellWithErrorBoundary() {
+  return (
+    <PWAErrorBoundary>
+      <AppShell />
+    </PWAErrorBoundary>
   )
 }
