@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import mapboxgl from 'mapbox-gl'
 import { computeBounds, toFeatureCollection, type MapEventItem } from '../lib/map'
 
 export default function MapHome(){
   const containerRef = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<mapboxgl.Map | null>(null)
+  const navigate = useNavigate()
 
   // TODO: Replace with Firestore fetch. Demo items for now.
   const items: MapEventItem[] = useMemo(() => ([
@@ -16,6 +18,13 @@ export default function MapHome(){
   useEffect(() => {
     if (!containerRef.current) return
     if (mapRef.current) return
+
+    // Add event listener for navigation
+    const handleNavigateToEvent = (event: CustomEvent<string>) => {
+      navigate(`/app/e/${event.detail}`)
+    }
+
+    window.addEventListener('navigateToEvent', handleNavigateToEvent as EventListener)
 
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
     const map = new mapboxgl.Map({
@@ -104,7 +113,7 @@ export default function MapHome(){
         const name = f.properties?.name as string
         const id = f.properties?.id as string
         const city = f.properties?.city as string | undefined
-        const html = `<div style="min-width:180px"><strong style="color:#333;font-weight:600;">${name}</strong>${city ? `<div style="font-size:12px;color:#666;margin-top:4px;">${city}</div>`: ''}<div style=\"margin-top:8px\"><a class=\"btn\" href=\"/app/e/${id}\">Open</a></div></div>`
+        const html = `<div style="min-width:180px"><strong style="color:#333;font-weight:600;">${name}</strong>${city ? `<div style="font-size:12px;color:#666;margin-top:4px;">${city}</div>`: ''}<div style=\"margin-top:8px\"><button class=\"btn\" onclick=\"window.dispatchEvent(new CustomEvent('navigateToEvent', { detail: '${id}' }))\">Open</button></div></div>`
         new mapboxgl.Popup({ offset: 12 }).setLngLat(coordinates).setHTML(html).addTo(map)
       })
 
@@ -112,7 +121,10 @@ export default function MapHome(){
       if (bounds) map.fitBounds(bounds as any, { padding: 40, duration: 600 })
     })
 
-    return () => { map.remove() }
+    return () => {
+      map.remove()
+      window.removeEventListener('navigateToEvent', handleNavigateToEvent as EventListener)
+    }
   }, [items])
 
   return (
