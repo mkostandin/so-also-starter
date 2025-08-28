@@ -33,3 +33,161 @@ label{font-size:12px;opacity:.8}
 .mapboxgl-ctrl-attrib {
   display: none !important;
 }
+
+/* PWA Fullscreen and Native App Experience */
+@media all and (display-mode: standalone) {
+  /* Hide browser UI when in standalone mode */
+  body {
+    /* Ensure full height in standalone mode */
+    min-height: 100vh;
+    min-height: 100svh; /* Use small viewport height for mobile */
+    background: #0b1220;
+  }
+
+  /* Handle safe areas for devices with notches */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Ensure fullscreen map experience */
+  .map-container {
+    height: 100vh;
+    height: 100svh;
+  }
+
+  /* Adjust tabs for fullscreen */
+  .tabs {
+    padding-bottom: env(safe-area-inset-bottom, 8px);
+  }
+
+  /* Handle orientation lock feedback */
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    /* Show message when device is rotated to landscape in portrait-locked app */
+    body::before {
+      content: "Please rotate your device to portrait orientation";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 18, 32, 0.95);
+      color: #e6edf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.2rem;
+      padding: 2rem;
+      z-index: 9999;
+      backdrop-filter: blur(4px);
+    }
+  }
+}
+
+/* iOS-specific fullscreen styles */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari fullscreen adjustments */
+  .map-container {
+    /* Account for iOS Safari bottom bar in standalone mode */
+    height: calc(100vh - env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Status bar styling for mobile browsers */
+.status-bar-margin {
+  padding-top: 20px;
+}
+
+/* Loading states for PWA */
+.pwa-install-prompt {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: #101826;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.pwa-install-prompt .install-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.pwa-install-prompt .btn {
+  flex: 1;
+  margin: 0;
+}
+
+/* Hide install prompt when in standalone mode */
+@media all and (display-mode: standalone) {
+  .pwa-install-prompt {
+    display: none;
+  }
+}
+
+/* Ensure proper touch targets for mobile */
+@media (max-width: 768px) {
+  .btn, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* PWA update notification */
+.pwa-update-available {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  background: #0ea5e9;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.pwa-update-available .update-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Offline indicator */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #dc2626;
+  color: white;
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+  z-index: 1000;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+.offline-indicator.show {
+  transform: translateY(0);
+}

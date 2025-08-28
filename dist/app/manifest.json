@@ -1,20 +1,54 @@
 {
     "name": "So Also",
     "short_name": "So Also",
+    "description": "Discover and share events and conferences",
     "start_url": "/app/",
     "scope": "/app/",
     "display": "standalone",
+    "orientation": "portrait",
     "background_color": "#0b1220",
     "theme_color": "#0ea5e9",
+    "lang": "en",
+    "categories": ["lifestyle", "productivity", "social"],
     "capture_links": "existing-client",
+    "prefer_related_applications": false,
+    "related_applications": [],
+    "iarc_rating_id": "",
+    "edge_side_panel": {
+      "preferred_width": 400
+    },
+    "launch_handler": {
+      "client_mode": "focus-existing"
+    },
+    "handle_links": "preferred",
+    "file_handlers": [],
+    "protocol_handlers": [],
     "icons": [
       { "src": "/app/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
       { "src": "/app/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
     ],
     "shortcuts": [
-      { "name": "Browse", "url": "/app/map" },
-      { "name": "Submit Event", "url": "/app/submit" },
-      { "name": "Conferences", "url": "/app/conferences" }
+      {
+        "name": "Browse Events",
+        "short_name": "Browse",
+        "description": "Browse events on the map",
+        "url": "/app/map",
+        "icons": [{ "src": "/app/icons/icon-192.png", "sizes": "192x192" }]
+      },
+      {
+        "name": "Submit Event",
+        "short_name": "Submit",
+        "description": "Submit a new event",
+        "url": "/app/submit",
+        "icons": [{ "src": "/app/icons/icon-192.png", "sizes": "192x192" }]
+      },
+      {
+        "name": "Conferences",
+        "short_name": "Conferences",
+        "description": "Browse conferences",
+        "url": "/app/conferences",
+        "icons": [{ "src": "/app/icons/icon-192.png", "sizes": "192x192" }]
+      }
     ]
   }
   
