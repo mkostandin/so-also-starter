@@ -34,9 +34,36 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - simple cache-first strategy for app resources
+// Fetch event - handle navigation and app resources
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+
+  // Handle navigation requests (when user clicks app icon)
+  if (event.request.mode === 'navigate') {
+    // If navigating to root or app root, redirect to /app/
+    if (url.pathname === '/' || url.pathname === '/app' || url.pathname === '/app/') {
+      event.respondWith(
+        fetch('/app/')
+          .catch(() => {
+            // Fallback to cached version or offline page
+            return caches.match('/app/') || new Response(`
+              <!DOCTYPE html>
+              <html>
+                <head><title>So Also</title></head>
+                <body style="font-family: system-ui; text-align: center; padding: 2rem; background: #0b1220; color: #e6edf8;">
+                  <h1>So Also</h1>
+                  <p>Discover and share events</p>
+                  <a href="/app/" style="color: #0ea5e9;">Open App</a>
+                </body>
+              </html>
+            `, {
+              headers: { 'Content-Type': 'text/html' }
+            });
+          })
+      );
+      return;
+    }
+  }
 
   // Only handle GET requests for app resources
   if (event.request.method !== 'GET' || !url.pathname.startsWith('/app/')) return;

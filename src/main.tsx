@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import './styles.css'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import AppShell from './AppShell'
+import LandingPage from './routes/LandingPage'
 import MapView from './routes/MapView'
 import ListView from './routes/ListView'
 import CalendarView from './routes/CalendarView'
@@ -17,7 +18,7 @@ import ConferenceDetail from './routes/ConferenceDetail'
 import SeriesEditor from './routes/SeriesEditor'
 
 const router = createBrowserRouter([
-  { path: '/', element: <div/> },
+  { path: '/', element: <LandingPage/> },
   {
     path: '/app',
     element: <AppShell/>,

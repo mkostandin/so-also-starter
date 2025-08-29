@@ -48,6 +48,17 @@ export function isStandalone(): boolean {
 }
 
 /**
+ * Ensure PWA opens at correct URL (/app)
+ * Call this in app initialization to redirect if needed
+ */
+export function ensureCorrectPWAUrl(): void {
+  if (isStandalone() && window.location.pathname === '/') {
+    // If we're in PWA mode but at root, redirect to /app
+    window.location.href = '/app/';
+  }
+}
+
+/**
  * Check if the app is running on a mobile device
  */
 export function isMobile(): boolean {

@@ -7,7 +7,8 @@ import {
   onConnectivityChange,
   onOrientationChange,
   isStandalone,
-  onServiceWorkerUpdate
+  onServiceWorkerUpdate,
+  ensureCorrectPWAUrl
 } from './lib/pwa'
 
 function PWAErrorBoundary({ children }: { children: React.ReactNode }) {
@@ -94,6 +95,9 @@ function AppShell(){
   const [isPortrait, setIsPortrait] = useState(true)
 
   useEffect(() => {
+    // Ensure PWA opens at correct URL
+    ensureCorrectPWAUrl()
+
     // Handle connectivity changes
     const unsubscribeConnectivity = onConnectivityChange((online) => {
       setIsOffline(!online)
