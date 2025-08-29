@@ -3,11 +3,11 @@ const CACHE_NAME = 'so-also-v1';
 
 // Resources to cache immediately
 const STATIC_ASSETS = [
-  '/app/',
+  '/',
+  '/index.html',
   '/app/manifest.json',
   '/app/icon-192.png',
-  '/app/icon-512.png',
-  '/styles/global.css'
+  '/app/icon-512.png'
 ];
 
 // Install event - cache essential assets
@@ -40,29 +40,28 @@ self.addEventListener('fetch', (event) => {
 
   // Handle navigation requests (when user clicks app icon)
   if (event.request.mode === 'navigate') {
-    // If navigating to root or app root, redirect to /app/
-    if (url.pathname === '/' || url.pathname === '/app' || url.pathname === '/app/') {
-      event.respondWith(
-        fetch('/app/')
-          .catch(() => {
-            // Fallback to cached version or offline page
-            return caches.match('/app/') || new Response(`
-              <!DOCTYPE html>
-              <html>
-                <head><title>So Also</title></head>
-                <body style="font-family: system-ui; text-align: center; padding: 2rem; background: #0b1220; color: #e6edf8;">
-                  <h1>So Also</h1>
-                  <p>Discover and share events</p>
-                  <a href="/app/" style="color: #0ea5e9;">Open App</a>
-                </body>
-              </html>
-            `, {
-              headers: { 'Content-Type': 'text/html' }
-            });
-          })
-      );
-      return;
-    }
+    // For any navigation request to the app, serve the main index.html
+    // React Router will handle the routing from there
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => {
+          // Fallback to cached version
+          return caches.match('/') || caches.match('/index.html') || new Response(`
+            <!DOCTYPE html>
+            <html>
+              <head><title>So Also</title></head>
+              <body style="font-family: system-ui; text-align: center; padding: 2rem; background: #0b1220; color: #e6edf8;">
+                <h1>So Also</h1>
+                <p>Discover and share events</p>
+                <a href="/" style="color: #0ea5e9;">Open App</a>
+              </body>
+            </html>
+          `, {
+            headers: { 'Content-Type': 'text/html' }
+          });
+        })
+    );
+    return;
   }
 
   // Only handle GET requests for app resources
@@ -89,10 +88,10 @@ self.addEventListener('fetch', (event) => {
             <!DOCTYPE html>
             <html>
               <head><title>Offline - So Also</title></head>
-              <body style="font-family: system-ui; text-align: center; padding: 2rem;">
+              <body style="font-family: system-ui; text-align: center; padding: 2rem; background: #0b1220; color: #e6edf8;">
                 <h1>You're Offline</h1>
                 <p>Please check your internet connection and try again.</p>
-                <button onclick="window.location.reload()">Retry</button>
+                <button onclick="window.location.reload()" style="background: #0ea5e9; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Retry</button>
               </body>
             </html>
           `, {
